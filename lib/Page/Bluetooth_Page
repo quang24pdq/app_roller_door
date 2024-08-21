@@ -1,0 +1,116 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+
+class BluetoothPage extends StatefulWidget {
+  @override
+  _BluetoothPageState createState() => _BluetoothPageState();
+}
+
+class _BluetoothPageState extends State<BluetoothPage> {
+  final FlutterBlue _flutterBlue = FlutterBlue.instance;
+  List<BluetoothDevice> _devicesList = [];
+  bool _isScanning = false;
+
+  void _startBluetoothScan() {
+    if (!_isScanning) {
+      _flutterBlue.startScan(timeout: Duration(seconds: 4));
+      setState(() {
+        _isScanning = true;
+      });
+
+      _flutterBlue.scanResults.listen((results) {
+        setState(() {
+          _devicesList = results
+              .where((result) => result.advertisementData.localName.isNotEmpty)
+              .map((result) => result.device)
+              .toList();
+        });
+      });
+
+      _flutterBlue.stopScan().then((_) {
+        setState(() {
+          _isScanning = false;
+        });
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Bluetooth Devices'),
+        backgroundColor: Color(0xFF007AFF),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh, color: Colors.white, size: 30),
+            onPressed: _startBluetoothScan,
+            tooltip: 'Scan for devices',
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: _startBluetoothScan,
+              child: Text(_isScanning ? 'Scanning...' : 'Start Scan'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF007AFF),
+                padding: EdgeInsets.symmetric(vertical: 15),
+                textStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 5,
+              ),
+            ),
+          ),
+          Expanded(
+            child: _devicesList.isEmpty
+                ? Center(
+                    child: Text(
+                      _isScanning ? 'Scanning for devices...' : 'No devices found',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _devicesList.length,
+                    itemBuilder: (context, index) {
+                      final device = _devicesList[index];
+                      return Card(
+                        elevation: 5,
+                        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          leading: Icon(Icons.bluetooth, color: Color(0xFF007AFF), size: 30),
+                          title: Text(device.name.isEmpty ? 'Unnamed Device' : device.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          subtitle: Text(device.id.toString(), style: TextStyle(color: Colors.grey)),
+                          onTap: () async {
+                            try {
+                              await device.connect();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Connected to ${device.name}')),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to connect: $e')),
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
