@@ -51,13 +51,13 @@ class _ScanQrPageState extends State<ScanQrPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0063B2),
+        backgroundColor: const Color(0xFF0057D8),
         centerTitle: true,
         title: const Text(
           'Quét mã QR',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -70,23 +70,23 @@ class _ScanQrPageState extends State<ScanQrPage> {
             const Text(
               'AST Remote: Thêm thiết bị',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF0063B2),
+                color: Color(0xFF0057D8),
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Container(
               height: 300,
               decoration: BoxDecoration(
                 color: Colors.black,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
+                    color: Colors.grey.withOpacity(0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
@@ -95,16 +95,17 @@ class _ScanQrPageState extends State<ScanQrPage> {
                 onQRViewCreated: _onQRViewCreated,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Text(
               'Kết quả quét: $_scanResult',
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -118,7 +119,7 @@ class _ScanQrPageState extends State<ScanQrPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -127,19 +128,19 @@ class _ScanQrPageState extends State<ScanQrPage> {
                       // Xử lý khi nhấn nút "Nhập mã"
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0063B2),
+                      backgroundColor: const Color(0xFF0057D8),
                       padding: const EdgeInsets.symmetric(
                         vertical: 16.0,
                         horizontal: 24.0,
                       ),
                       textStyle: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation: 5,
+                      elevation: 8,
                     ),
                     child: const Text('Nhập mã'),
                   ),
@@ -152,19 +153,19 @@ class _ScanQrPageState extends State<ScanQrPage> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.grey[600],
                       padding: const EdgeInsets.symmetric(
                         vertical: 16.0,
                         horizontal: 24.0,
                       ),
                       textStyle: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation: 5,
+                      elevation: 8,
                     ),
                     child: const Text('Hủy bỏ'),
                   ),

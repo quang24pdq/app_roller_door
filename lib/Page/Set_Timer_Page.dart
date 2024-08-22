@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, library_private_types_in_public_api, prefer_final_fields
+
 import 'package:flutter/material.dart';
 
 class SetTimerPage extends StatefulWidget {
@@ -53,6 +55,7 @@ class _SetTimerPageState extends State<SetTimerPage> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Nhập phút',
+                       
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.timer),
                         contentPadding: EdgeInsets.symmetric(vertical: 15),

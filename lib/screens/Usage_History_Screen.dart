@@ -23,21 +23,26 @@ class _UsageHistoryScreenState extends State<UsageHistoryScreen> {
     if (selectedDate != null && selectedDate != _selectedDate) {
       setState(() {
         _selectedDate = selectedDate;
-        // Cập nhật danh sách _history để chỉ hiển thị các mục theo ngày đã chọn.
-        // Đây là ví dụ đơn giản, bạn có thể thay đổi để phù hợp với dữ liệu của mình.
         _history = _history.where((item) => item['date'] == '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}').toList();
       });
     }
+  }
+
+  void _deleteItem(int index) {
+    setState(() {
+      _history.removeAt(index);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lịch Sử Sử Dụng'),
+        title: const Text('Lịch Sử Sử Dụng'),
+        backgroundColor: const Color(0xFF007AFF),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
             onPressed: _filterByDate,
           ),
         ],
@@ -45,38 +50,102 @@ class _UsageHistoryScreenState extends State<UsageHistoryScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: _history.isEmpty
-            ? Center(child: Text('Không có dữ liệu cho ngày này'))
-            : ListView(
-          children: _history.map((item) => _buildHistoryItem(
-            name: item['name']!,
-            time: item['time']!,
-            date: item['date']!,
-            status: item['status']!,
-          )).toList(),
-        ),
+            ? const Center(child: Text('Không có dữ liệu cho ngày này', style: TextStyle(fontSize: 16)))
+            : ListView.builder(
+                itemCount: _history.length,
+                itemBuilder: (context, index) {
+                  return _buildHistoryItem(index);
+                },
+              ),
       ),
     );
   }
 
-  Widget _buildHistoryItem({
-    required String name,
-    required String time,
-    required String date,
-    required String status,
-  }) {
+  Widget _buildHistoryItem(int index) {
+    final item = _history[index];
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      elevation: 4,
-      child: ListTile(
-        contentPadding: EdgeInsets.all(16),
-        title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Thời gian: $time'),
-            Text('Ngày: $date'),
-            Text('Trạng thái: $status'),
-          ],
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      elevation: 6,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF007AFF), Color(0xFF1E90FF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(16),
+          title: Text(
+            item['name']!,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 8),
+              Text(
+                'Thời gian: ${item['time']}',
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Ngày: ${item['date']}',
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Trạng thái: ${item['status']}',
+                style: TextStyle(
+                  color: item['status'] == 'Mở' ? Colors.greenAccent : Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.redAccent),
+            onPressed: () {
+              // Hiển thị hộp thoại xác nhận xóa
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Xóa mục'),
+                  content: const Text('Bạn có chắc chắn muốn xóa mục này?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Hủy'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _deleteItem(index);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Xóa'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

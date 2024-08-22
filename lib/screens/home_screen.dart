@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _resetScreen() {
     setState(() {
-      deviceStatus = 'Trạng thái: Trực tuyến';
+      deviceStatus = '';
     });
   }
 
@@ -39,33 +39,42 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       drawer: _buildDrawer(context),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 24),
-            const Text(
-              'SR3651274\nCửa Chính Nhà',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF007AFF),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue[100]!, Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 24),
+              const Text(
+                'SR3651274\nCửa Chính Nhà',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF007AFF),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              deviceStatus,
-              style: TextStyle(
-                color: Colors.green[800],
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+              const SizedBox(height: 8),
+              Text(
+                deviceStatus,
+                style: TextStyle(
+                  color: Colors.green[800],
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-            _buildRemoteControl(context),
-          ],
+              const SizedBox(height: 32),
+              _buildRemoteControl(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -116,68 +125,73 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildRemoteControl(BuildContext context) {
+  Widget _buildRemoteControl() {
     return Center(
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF007AFF)),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 6,
-              offset: const Offset(0, 4),
+              color: Colors.grey.withOpacity(0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildControlButton(Icons.arrow_upward, 'Lên'),
-                const SizedBox(width: 16),
-                _buildControlButton(Icons.arrow_downward, 'Xuống'),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildControlButton(Icons.lock, 'Khóa'),
-                const SizedBox(width: 16),
-                _buildControlButton(Icons.lock_open, 'Mở'),
-              ],
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildControlButton(Icons.arrow_upward, 'Lên'),
+                  const SizedBox(width: 16),
+                  _buildControlButton(Icons.arrow_downward, 'Xuống'),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildControlButton(Icons.lock, 'Khóa'),
+                  const SizedBox(width: 16),
+                  _buildControlButton(Icons.lock_open, 'Mở'),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildControlButton(IconData icon, String label) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: const Color(0xFF007AFF),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+    return Container(
+      width: 100,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white, backgroundColor: const Color(0xFF007AFF),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 8,
+          shadowColor: Colors.black.withOpacity(0.3),
         ),
-        elevation: 4,
-      ),
-      onPressed: () {
-        // Chức năng của nút
-      },
-      child: Column(
-        children: [
-          Icon(icon, size: 28),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 16)),
-        ],
+        onPressed: () {
+          // Chức năng của nút
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 28),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(fontSize: 16)),
+          ],
+        ),
       ),
     );
   }
@@ -190,7 +204,7 @@ class _MainScreenState extends State<MainScreen> {
             padding: const EdgeInsets.only(bottom: 8),
             decoration: BoxDecoration(
               color: const Color(0xFF007AFF),
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
             ),
             child: UserAccountsDrawerHeader(
               accountName: const Text('Tên Người Dùng', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
@@ -282,7 +296,7 @@ class _MainScreenState extends State<MainScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ScanQrPage()),
+                      MaterialPageRoute(builder: (context) => ScanQrPage()),
                     );
                   },
                 ),
@@ -292,17 +306,5 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
-  }
-
-  void _startBluetoothScan() {
-    flutterBlue.startScan(timeout: const Duration(seconds: 4));
-    flutterBlue.scanResults.listen((results) {
-      setState(() {
-        var scanResults = results;
-      });
-      for (ScanResult result in results) {
-        print('Thiết bị tìm thấy: ${result.device.name}');
-      }
-    });
   }
 }
