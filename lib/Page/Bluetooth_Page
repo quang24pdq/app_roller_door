@@ -11,6 +11,12 @@ class _BluetoothPageState extends State<BluetoothPage> {
   List<BluetoothDevice> _devicesList = [];
   bool _isScanning = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _startBluetoothScan();
+  }
+
   void _startBluetoothScan() {
     if (!_isScanning) {
       _flutterBlue.startScan(timeout: Duration(seconds: 4));
@@ -35,15 +41,60 @@ class _BluetoothPageState extends State<BluetoothPage> {
     }
   }
 
+  Future<void> _connectToDevice(BluetoothDevice device) async {
+    try {
+      await device.connect();
+      print('Connected to ${device.name}');
+
+      // Tìm dịch vụ và characteristic
+      List<BluetoothService> services = await device.discoverServices();
+      BluetoothCharacteristic? targetCharacteristic;
+
+      for (var service in services) {
+        for (var characteristic in service.characteristics) {
+          if (characteristic.properties.write) {
+            targetCharacteristic = characteristic;
+            break;
+          }
+        }
+        if (targetCharacteristic != null) break;
+      }
+
+      if (targetCharacteristic != null) {
+        // Gửi lệnh qua Bluetooth
+        String command = 'YourCommandHere'; // Thay thế lệnh của bạn ở đây
+        await targetCharacteristic.write(command.codeUnits);
+        print('Command sent: $command');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Command sent to ${device.name}')),
+        );
+      } else {
+        print('No writable characteristic found.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No writable characteristic found.')),
+        );
+      }
+    } catch (e) {
+      print('Failed to connect or send command: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to connect or send command: $e')),
+      );
+    } finally {
+      // Ngắt kết nối sau khi gửi lệnh
+      await device.disconnect();
+      print('Disconnected from ${device.name}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Bluetooth Devices'),
-        backgroundColor: Color(0xFF007AFF),
+        backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh, color: Colors.white, size: 30),
+            icon: Icon(Icons.refresh, size: 30),
             onPressed: _startBluetoothScan,
             tooltip: 'Scan for devices',
           ),
@@ -57,7 +108,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
               onPressed: _startBluetoothScan,
               child: Text(_isScanning ? 'Scanning...' : 'Start Scan'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF007AFF),
+                backgroundColor: Colors.blueAccent, // Đổi từ primary sang backgroundColor
                 padding: EdgeInsets.symmetric(vertical: 15),
                 textStyle: TextStyle(
                   fontSize: 18,
@@ -66,7 +117,7 @@ class _BluetoothPageState extends State<BluetoothPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                elevation: 5,
+                elevation: 8,
               ),
             ),
           ),
@@ -83,27 +134,19 @@ class _BluetoothPageState extends State<BluetoothPage> {
                     itemBuilder: (context, index) {
                       final device = _devicesList[index];
                       return Card(
-                        elevation: 5,
+                        elevation: 8,
                         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         child: ListTile(
-                          leading: Icon(Icons.bluetooth, color: Color(0xFF007AFF), size: 30),
-                          title: Text(device.name.isEmpty ? 'Unnamed Device' : device.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          leading: Icon(Icons.bluetooth, color: Colors.blueAccent, size: 32),
+                          title: Text(
+                            device.name.isEmpty ? 'Unnamed Device' : device.name,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                           subtitle: Text(device.id.toString(), style: TextStyle(color: Colors.grey)),
-                          onTap: () async {
-                            try {
-                              await device.connect();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Connected to ${device.name}')),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Failed to connect: $e')),
-                              );
-                            }
-                          },
+                          onTap: () => _connectToDevice(device),
                         ),
                       );
                     },

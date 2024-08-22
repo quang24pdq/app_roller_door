@@ -77,22 +77,37 @@ class _ScanQrPageState extends State<ScanQrPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            Container(
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: QRView(
-                key: _qrKey,
-                onQRViewCreated: _onQRViewCreated,
+            // Widget để giữ tỷ lệ khung hình cho QRView
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Tính tỷ lệ khung hình của camera
+                  final aspectRatio = constraints.maxWidth / constraints.maxHeight;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: QRView(
+                      key: _qrKey,
+                      onQRViewCreated: _onQRViewCreated,
+                      overlay: QrScannerOverlayShape(
+                        borderColor: Color(0xFF0057D8),
+                        borderRadius: 10,
+                        borderLength: 30,
+                        borderWidth: 10,
+                        cutOutSize: constraints.maxWidth * 0.7,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 20),

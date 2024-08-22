@@ -22,52 +22,69 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[50],
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Đăng Nhập',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal[800],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal[800]!, Colors.teal[400]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'Đăng Nhập',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                SizedBox(height: 24),
-                // Animated logo
-                AnimatedContainer(
-                  duration: Duration(seconds: 1),
-                  curve: Curves.easeInOut,
-                  width: 150,
-                  height: 150,
-                  child: Image.network(
-                    'https://bizweb.dktcdn.net/100/332/152/themes/690782/assets/logo.png?1689512669644', // URL hình ảnh
-                    fit: BoxFit.contain,
+                  const SizedBox(height: 24),
+                  // Animated logo with shadow
+                  AnimatedContainer(
+                    duration: const Duration(seconds: 1),
+                    curve: Curves.easeInOut,
+                    width: 150,
+                    height: 150,
+                    child: Image.network(
+                      'https://bizweb.dktcdn.net/100/332/152/themes/690782/assets/logo.png?1689512669644', // URL hình ảnh
+                      fit: BoxFit.contain,
+                    ),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 24),
-                _buildTextField(
-                  controller: _emailController,
-                  label: 'Email',
-                  icon: Icons.email,
-                ),
-                SizedBox(height: 16),
-                _buildTextField(
-                  controller: _passwordController,
-                  label: 'Mật khẩu',
-                  icon: Icons.lock,
-                  obscureText: true,
-                ),
-                SizedBox(height: 24),
-                _buildLoginButton(),
-                SizedBox(height: 16),
-                _buildRegisterButton(),
-              ],
+                  const SizedBox(height: 24),
+                  _buildTextField(
+                    controller: _emailController,
+                    label: 'Email',
+                    icon: Icons.email,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _passwordController,
+                    label: 'Mật khẩu',
+                    icon: Icons.lock,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 24),
+                  _buildLoginButton(),
+                  const SizedBox(height: 16),
+                  _buildRegisterButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -82,61 +99,77 @@ class _LoginScreenState extends State<LoginScreen> {
     bool obscureText = false,
   }) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       child: TextField(
         controller: controller,
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon, color: Colors.teal[600]),
+          prefixIcon: Icon(icon, color: Colors.white),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal[600]!, width: 2),
+            borderSide: const BorderSide(color: Colors.white, width: 2),
             borderRadius: BorderRadius.circular(12),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.teal[300]!, width: 1),
+            borderSide: const BorderSide(color: Colors.white70, width: 1),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
 
   Widget _buildLoginButton() {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       child: ElevatedButton(
         onPressed: _login,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.teal[600],
-          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          elevation: 5,
+          elevation: 8,
+          shadowColor: Colors.teal[900],
         ),
-        child: Text(
+        child: const Text(
           'Đăng Nhập',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildRegisterButton() {
-    return TextButton(
+    return ElevatedButton(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => RegisterScreen()),
         );
       },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        side: BorderSide(color: Colors.teal[600]!, width: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        shadowColor: Colors.teal[900],
+        elevation: 8,
+      ),
       child: Text(
         'Chưa có tài khoản? Đăng ký',
         style: TextStyle(
