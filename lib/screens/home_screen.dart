@@ -16,7 +16,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   String deviceStatus = 'Trạng thái: Trực tuyến';
-
   FlutterBlue flutterBlue = FlutterBlue.instance;
 
   void _resetScreen() {
@@ -30,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('AST Remote'),
-        backgroundColor: const Color(0xFF007AFF),
+        backgroundColor: const Color(0xFF1E88E5),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -51,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF007AFF),
+                color: Color(0xFF1E88E5),
               ),
             ),
             const SizedBox(height: 8),
@@ -76,12 +75,15 @@ class _MainScreenState extends State<MainScreen> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
                 title: const Text('Kết nối với'),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
-                      leading: const Icon(Icons.bluetooth, color: Color(0xFF007AFF)),
+                      leading: const Icon(Icons.bluetooth, color: Color(0xFF1E88E5)),
                       title: const Text('Bluetooth'),
                       onTap: () {
                         Navigator.push(
@@ -91,11 +93,11 @@ class _MainScreenState extends State<MainScreen> {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.wifi, color: Color(0xFF007AFF)),
+                      leading: const Icon(Icons.wifi, color: Color(0xFF1E88E5)),
                       title: const Text('Wi-Fi'),
                       onTap: () {
                         Navigator.pop(context);
-                        // Thêm mã kết nối Wi-Fi ở đây
+                        // Add Wi-Fi connection code here
                       },
                     ),
                   ],
@@ -121,36 +123,74 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF007AFF)),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFF1E88E5), width: 2),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 6,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Add space between rows
             _buildRemoteControlRow(
               [
-                _buildControlButton(Icons.arrow_upward, 'Lên'),
-                _buildControlButton(Icons.arrow_downward, 'Xuống'),
+                _buildControlButton(Icons.arrow_upward, 'Lên', context),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             _buildRemoteControlRow(
               [
-                _buildControlButton(Icons.lock, 'Khóa'),
-                _buildControlButton(Icons.lock_open, 'Mở'),
+                _buildControlButton(Icons.lock, 'Khóa', context),
+                const SizedBox(width: 16),
+                _buildControlButton(Icons.lock_open, 'Mở', context),
+              ],
+            ),
+            const SizedBox(height: 24),
+            _buildRemoteControlRow(
+              [
+                _buildControlButton(Icons.arrow_downward, 'Xuống', context),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildControlButton(IconData icon, String label, BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.all(20),
+        shape: const CircleBorder(),
+        backgroundColor: const Color(0xFF1E88E5),
+        shadowColor: Colors.black45,
+        elevation: 8,
+      ),
+      onPressed: () {
+        setState(() {
+          deviceStatus = 'Trạng thái: Đang hoạt động';
+        });
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 32, color: Colors.white),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -162,38 +202,14 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildControlButton(IconData icon, String label) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: const Color(0xFF007AFF),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        elevation: 4,
-      ),
-      onPressed: () {
-        // Chức năng của nút
-      },
-      child: Column(
-        children: [
-          Icon(icon, size: 32),
-          const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 18)),
-        ],
-      ),
-    );
-  }
-
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFF007AFF),
+              color: const Color(0xFF1E88E5),
               borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
             ),
             child: UserAccountsDrawerHeader(
@@ -201,10 +217,10 @@ class _MainScreenState extends State<MainScreen> {
               accountEmail: const Text('user@example.com', style: TextStyle(color: Colors.white)),
               currentAccountPicture: const CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 50, color: Color(0xFF007AFF)),
+                child: Icon(Icons.person, size: 50, color: Color(0xFF1E88E5)),
               ),
               decoration: const BoxDecoration(
-                color: Color(0xFF007AFF),
+                color: Color(0xFF1E88E5),
               ),
               otherAccountsPictures: [
                 IconButton(
@@ -234,7 +250,7 @@ class _MainScreenState extends State<MainScreen> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 ListTile(
-                  leading: const Icon(Icons.list, color: Color(0xFF007AFF)),
+                  leading: const Icon(Icons.list, color: Color(0xFF1E88E5)),
                   title: const Text('Danh Sách Người Dùng'),
                   onTap: () {
                     Navigator.push(
@@ -244,7 +260,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.history, color: Color(0xFF007AFF)),
+                  leading: const Icon(Icons.history, color: Color(0xFF1E88E5)),
                   title: const Text('Lịch Sử Sử Dụng'),
                   onTap: () {
                     Navigator.push(
@@ -258,20 +274,20 @@ class _MainScreenState extends State<MainScreen> {
                   title: Text('Chi Tiết Thiết Bị', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.timer, color: Color(0xFF007AFF)),
+                  leading: const Icon(Icons.timer, color: Color(0xFF1E88E5)),
                   title: const Text('Thời Gian Sử Dụng: 45 phút'),
                   trailing: const Icon(Icons.delete, color: Colors.red),
                   onTap: () {
-                    // Xử lý chức năng xóa
+                    // Handle delete functionality
                   },
                 ),
                 const ListTile(
-                  leading: Icon(Icons.online_prediction, color: Color(0xFF007AFF)),
+                  leading: Icon(Icons.online_prediction, color: Color(0xFF1E88E5)),
                   title: Text('Trạng Thái: Online'),
                 ),
                 const Divider(),
                 ListTile(
-                  leading: const Icon(Icons.timer, color: Color(0xFF007AFF)),
+                  leading: const Icon(Icons.timer, color: Color(0xFF1E88E5)),
                   title: const Text('Cài Đặt Thời Gian'),
                   onTap: () {
                     Navigator.push(
@@ -281,7 +297,7 @@ class _MainScreenState extends State<MainScreen> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.qr_code_scanner, color: Color(0xFF007AFF)),
+                  leading: const Icon(Icons.qr_code_scanner, color: Color(0xFF1E88E5)),
                   title: const Text('Quét QR'),
                   onTap: () {
                     Navigator.push(
@@ -290,15 +306,11 @@ class _MainScreenState extends State<MainScreen> {
                     );
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.settings, color: Color(0xFF007AFF)),
-                  title: const Text('Cài Đặt'),
-                  onTap: () {
-                    // Thực hiện cài đặt nếu có
-                  },
-                ),
               ],
             ),
+          ),
+          const ListTile(
+            title: Text('Phiên Bản: 1.0.0', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey)),
           ),
         ],
       ),

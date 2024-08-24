@@ -25,33 +25,33 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.teal[800]!, Colors.teal[400]!],
+            colors: [Colors.blueGrey[900]!, Colors.blueGrey[600]!],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    'Đăng Nhập',
+                    'Welcome Back!',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   // Animated logo with shadow
                   AnimatedContainer(
                     duration: const Duration(seconds: 1),
                     curve: Curves.easeInOut,
-                    width: 150,
-                    height: 150,
+                    width: 120,
+                    height: 120,
                     child: Image.network(
                       'https://bizweb.dktcdn.net/100/332/152/themes/690782/assets/logo.png?1689512669644', // URL hình ảnh
                       fit: BoxFit.contain,
@@ -59,14 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
+                          color: Colors.black.withOpacity(0.4),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   _buildTextField(
                     controller: _emailController,
                     label: 'Email',
@@ -75,11 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   _buildTextField(
                     controller: _passwordController,
-                    label: 'Mật khẩu',
+                    label: 'Password',
                     icon: Icons.lock,
                     obscureText: true,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   _buildLoginButton(),
                   const SizedBox(height: 16),
                   _buildRegisterButton(),
@@ -106,18 +106,18 @@ class _LoginScreenState extends State<LoginScreen> {
         obscureText: obscureText,
         decoration: InputDecoration(
           labelText: label,
-          prefixIcon: Icon(icon, color: Colors.white),
+          labelStyle: const TextStyle(color: Colors.white70),
+          prefixIcon: Icon(icon, color: Colors.white70),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.1),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.white, width: 2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white70, width: 1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
         style: const TextStyle(color: Colors.white),
@@ -132,18 +132,18 @@ class _LoginScreenState extends State<LoginScreen> {
       child: ElevatedButton(
         onPressed: _login,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal[600],
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          backgroundColor: Colors.tealAccent[700],
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(30),
           ),
-          elevation: 8,
-          shadowColor: Colors.teal[900],
+          elevation: 12,
+          shadowColor: Colors.black,
         ),
         child: const Text(
-          'Đăng Nhập',
+          'Login',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -153,29 +153,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildRegisterButton() {
-    return ElevatedButton(
+    return TextButton(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => RegisterScreen()),
         );
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        side: BorderSide(color: Colors.teal[600]!, width: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        shadowColor: Colors.teal[900],
-        elevation: 8,
-      ),
       child: Text(
-        'Chưa có tài khoản? Đăng ký',
+        'Don\'t have an account? Sign up',
         style: TextStyle(
-          color: Colors.teal[600],
+          color: Colors.white70,
           fontSize: 16,
           fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
         ),
       ),
     );

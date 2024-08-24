@@ -77,12 +77,9 @@ class _ScanQrPageState extends State<ScanQrPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            // Widget để giữ tỷ lệ khung hình cho QRView
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  // Tính tỷ lệ khung hình của camera
-                  final aspectRatio = constraints.maxWidth / constraints.maxHeight;
                   return Container(
                     decoration: BoxDecoration(
                       color: Colors.black,
